@@ -11,46 +11,6 @@ Go to the download page of the official Arch Linux webpage and download the ISO 
 
 Check this Arch Wiki article to prepare an installation medium, e.g. a USB flash drive or an optical disc: https://wiki.archlinux.org/title/installation_guide#Prepare_an_installation_medium
 
-### Connect to the web [WiFi]
-
-To connect to the web we use _iwctl_:
-
-To start _iwctl_ run the following command:
-
-```
-$ iwctl
-```
-
-We can then look for the device name:
-
-```
-[iwd]# device list
-```
-
-Then we can use the device name to scan for networks _(Note: This command won't output anything!)_:
-
-```
-[iwd]# station <device-name> scan
-```
-
-Now we can list all available networks:
-
-```
-[iwd]# station <device-name> get-networks
-```
-
-Finally, we connect to a network:
-
-```
-[iwd]# station <device-name> connect <SSID>
-```
-
-Check if you successfully established a connection by pinging the Google server:
-
-```
-$ ping 8.8.8.8
-```
-
 ### Console font
 
 ```
@@ -485,22 +445,10 @@ $ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 ### Other Tools
 
-#### Programming Languages
-
-These languages are needed for _Mason_, the LSP package manager in _Neovim_:
-
-```
-$ sudo pacman -S nodejs npm rust go ruby rubygems php composer lua luarocks python python-pip dotnet-runtime dotnet-sdk julia java-runtime-common java-environment-common jdk-openjdk
-```
-
 #### CLI utilities
 
 ```
-$ sudo pacman -S tldr fzf wget curl tar unzip gzip htop neofetch
-```
-
-```
-$ yay -S pfetch
+$ sudo pacman -S tldr fzf wget curl tar unzip gzip bahtop neofetch
 ```
 
 - _tldr_: Commands cheat sheet
@@ -510,22 +458,82 @@ $ yay -S pfetch
 - _tar_: Enzipping/Unzipping
 - _unzip_: Enzipping/Unzipping
 - _gzip_: Enzipping/Unzipping
-- _htop_: CLI task manager
+- _bashtop_: CLI task manager
 - _neofetch_: System information
-- _pfetch_: More concise system information
-
-#### Alternatives to traditional commands
-
-```
-$ sudo pacman -S fd ripgrep bat lsd tree-sitter tree-sitter-cli
-```
-
-- _fd_: Alternative to _find_ command
-- _ripgrep_: Alternative to _grep_ command
-- _bat_: Alternative to _cat_ command
-- _lsd_: Alternative to _ls_ command
-- _tree-sitter_ & _tree-sitter-cli_: Real syntax highlighting in Neovim
 
 ### Reboot
 
 When done installing the necessary packages, run the `sudo reboot` command.
+
+### Steam
+To install Steam on Arch Linux, you can use the package from the multilib repository. Steam is a popular platform for digital distribution of games and includes support for managing your games, online play, and community features. Here’s how to install Steam on Arch Linux:
+
+#### 1. Enable Multilib Repository
+First, you need to enable the multilib repository if you haven't done so already. The multilib repository contains software and libraries that are compiled for 32-bit architecture, which Steam requires.
+
+- Open the pacman configuration file:
+  ```bash
+  sudo nano /etc/pacman.conf
+  ```
+
+- Find the lines for `[multilib]` in the file. Uncomment both the `[multilib]` line and the line directly below it (`Include = /etc/pacman.d/mirrorlist`).
+
+- Save and exit the editor (in nano, press `Ctrl+O` to save and `Ctrl+X` to exit).
+
+- Update your package database:
+  ```bash
+  sudo pacman -Sy
+  ```
+
+#### 2. Install Steam
+Now that the multilib repository is enabled, you can install Steam:
+
+```bash
+sudo pacman -S steam
+```
+
+This command installs the Steam client and all required 32-bit libraries.
+
+#### 3. Running Steam
+- You can start Steam using your desktop environment's menu or by running `steam` in the terminal.
+- On the first run, Steam will update itself to the latest version, which may take some time depending on your internet connection.
+
+### 4. Protonup-qt
+
+```bash
+yay -S protonup-qt
+```
+## Installing Hyprland
+
+### Prerequisites
+
+```bash
+sudo pacman -S wlroots cmake wayland xorg-xwayland
+```
+
+```bash
+yay -S hyprland-git
+```
+
+### Configuration
+Hyprland uses a configuration file located at ~/.config/hypr/hyprland.conf. If the file doesn't exist, you can create it and configure it according to your needs. Sample configuration files and a lot of documentation can be found on the Hyprland GitHub page.
+
+### Running Hyprland
+After installation, you can start Hyprland directly from a TTY or add an entry for it in your display manager. To start it from a TTY:
+
+Logout of your current session and go to a TTY (Ctrl+Alt+F2, for example).
+Log in and run:
+```bash
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=hyprland
+hyprland
+```
+If you're using a display manager like SDDM or GDM, you may need to create a desktop entry for Hyprland. Create a file named `hyprland.desktop` in `/usr/share/wayland-sessions/` with the following contents:
+
+```
+[Desktop Entry]
+Name=Hyprland
+Comment=This session logs you into Hyprland
+Exec=hyprland
+Type=Application
+```
