@@ -89,107 +89,7 @@ $ mount --mkdir /dev/<efi_system_partition> /mnt/boot
 $ swapon /dev/<swap_partition>
 ```
 
-### Package install
-
-For a minimal system download and install these packages:
-
-```
-$ pacstrap -K /mnt base base-devel linux linux-firmware e2fsprogs networkmanager git nano man-db man-pages texinfo grub pacman git tar gzip unzip bzip2 xz efibootmgr
-```
-
-⚠️ If you get errors due to key then do the following:
-
-1. Initialize _pacman_ keys and populate them:
-
-```
-pacman-key --init
-pacman-key --populate
-```
-
-2. Synchronize Arch keyring:
-
-```
-archlinux-keyring-wkd-sync
-```
-
-### Last steps
-
-#### Generate fstab file
-
-```
-$ genfstab -U /mnt >> /mnt/etc/fstab
-```
-
-#### Change root into new system
-
-```
-$ arch-chroot /mnt
-```
-
-#### Set time zone
-
-```
-$ ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
-$ hwclock --systohc
-```
-
-#### Localization
-
-Edit _/etc/locale.gen_ and uncomment _en_US.UTF-8 UTF-8_ and other needed locales. Generate the locales by running:
-
-```
-$ locale-gen
-```
-
-Create _/etc/locale.conf_ and set the _LANG_ variable according to your preferred language:
-
-```
-LANG=en_US.UTF-8
-```
-
-#### Network configurations
-
-Create _/etc/hostname_ and type any name you wish as your hostname:
-
-```
-arch
-```
-
-#### Root password
-
-Set a new password for root:
-
-```
-$ passwd
-```
-
-#### Bootloader
-
-##### UEFI
-
-Run the following command:
-
-```
-$ grub-install --efi-directory=/boot --bootloader-id=GRUB
-```
-
-Then create a **GRUB** config file:
-
-```
-$ grub-mkconfig -o /boot/grub/grub.cfg
-```
-
-#### Final step
-
-Exit out of the chroot environment by typing `exit` or pressing <kbd>Ctrl</kbd>+<kbd>d</kbd>.
-
-Unmount all the partitions:
-
-```
-$ umount -R /mnt
-```
-
-Then type `poweroff` and remove the installation disk.
+# Follow Arch Install Wiki
 
 ## System-related Configurations
 
@@ -198,8 +98,8 @@ Then type `poweroff` and remove the installation disk.
 To use _pacman_ you first have to have a working internet connection by enabling _NetworkManager_:
 
 ```
-$ systemctl start NetworkManager
-$ systemctl enable NetworkManager
+$ systemctl start dhcpcd
+$ systemctl enable dhcpcd
 ```
 
 ### Update the system
